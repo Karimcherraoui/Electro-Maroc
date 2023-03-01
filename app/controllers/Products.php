@@ -16,6 +16,94 @@ class Products extends Controller
         $this->userModel = $this->model('User');
     }
 
+    public function categorie(){
+
+        $data = $this->productModel->getCategorie();
+
+        $this->view('pages/categorie',$data);
+    }
+
+
+
+    public function deleteCategorie($id){
+        $this->productModel->deletCategorie($id);
+        redirect('Products/categorie');
+    }
+
+   
+
+
+    public function addCategorie(){
+        
+        echo 'test';
+        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+
+
+            $_POST = filter_input_array(INPUT_POST, FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+
+            move_uploaded_file($_FILES['image']['tmp_name'], './images/upload/' . $_FILES['image']['name']);
+
+
+            // $name = $_POST['name'];
+
+            $data = [
+                'name' => $_POST['name'],
+                'image' => $_FILES['image']['name']
+            ];
+
+            $this->productModel->addCategorie($data);
+                redirect('Products/categorie');
+
+            }else {
+                $data = [
+                    'name' => '',
+                    'image' => '',
+                ];
+                $this->view('pages/categorie', $data);
+            }
+            
+
+
+        } 
+
+
+        public function editCategorie($id){
+        
+            echo 'test';
+            if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+    
+    
+                $_POST = filter_input_array(INPUT_POST, FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+    
+                move_uploaded_file($_FILES['image']['tmp_name'], './images/upload/' . $_FILES['image']['name']);
+    
+                $categorie = $this->productModel->findCategorieById($id);
+                // $name = $_POST['name'];
+    
+                if (empty($_FILES['image']['name'])) {
+                    $data = [
+                    'name' => $_POST['name'],
+                    'image' => $categorie->image,
+                ];
+    
+                }else {
+                    $data = [
+                        'name' => $_POST['name'],
+                        'image' => $_FILES['image']['name']
+                    ];
+                }
+
+                $this->productModel->editCategorie($data);
+                    
+    
+            } 
+        
+        
+        }
+    
+
+
+
     public function addProduct()
     {
 
@@ -175,10 +263,12 @@ class Products extends Controller
     public function product()
     {
         $products = $this->productModel->getProducts();
+        $categories = $this->productModel->getCategorie();
         $rows = $this->productModel->stats();
         $data = [
             'products' => $products,
-            'num' => $rows
+            'num' => $rows,
+            'categories' => $categories
         ];
 
         
@@ -208,12 +298,56 @@ class Products extends Controller
         $this->view('pages/commande', $data);
     }
 
+    // public function facture()
+    // {
 
+    //     $products = [];
+    //     $product = $this->productModel->getIdProductByIdClient($_SESSION['user_id']);
+    //     $client = $this->userModel->getClientById($_SESSION['user_id']);
+    //     $rows = $this->productModel->stats();
+
+    //     show($qte);
+        
+    //     foreach ($product as $key => $value) {
+            
+    //         $products[$key] = $this->productModel->getProductById($value->product_id);
+            
+    //     }
+        
+    //     $data = [
+    //         'products' => $products,
+    //         'users' => $client,
+    //         'quantite'=> $qte,
+    //         'num' => $rows
+    //     ];
+    //     $this->view('pages/facture', $data);
+    // }
+
+
+    public function facture($idCommande)
+     {
+        
+        // $idCommande = $this->productModel->idcommande();
+        $details = $this->productModel->getCommandsDetails($idCommande);
+        $totalPrix = $this->productModel->getTotalPrix($idCommande);
+        $clientByCommande = $this->productModel->getClientByCommande($idCommande);
+
+        
+        $data = [
+            
+            'details' => $details,
+            'total_prix' => $totalPrix,
+            'client' => $clientByCommande,
+            'idCommande' =>$idCommande
+        ];
+
+
+
+        $this->view('pages/facture', $data );
+
+     }
     public function addToOrder($id_prd)
     {
-
-        show($_SESSION['user_id']);
-        echo ($id_prd);
 
         $data = [
             'id_cl' => $_SESSION['user_id'],
@@ -222,6 +356,10 @@ class Products extends Controller
         $this->productModel->addToCart($data);
         redirect('Products/commande');
     }
+
+    
+
+
 
     public function addOrderToCommande(){
 
@@ -233,13 +371,6 @@ class Products extends Controller
             'user_id'=>$_SESSION['user_id']
         ];
         $idCommande =  $this->productModel->addCommande($detail);
-        // $commandes = $this->productModel->getComandes($_SESSION['user_id']);
-
-        // echo '<pre>';
-        // var_dump($_POST,$_SESSION);
-        // exit;
-        // $total=$this->productModel->totalPrice($idCommande);
-       
         
         for ($i=0; $i < count($products); $i++) {
             
@@ -250,18 +381,30 @@ class Products extends Controller
                 
             ];
              $this->productModel->addOrderToCommande($data);
-            
         }
         
         $this->productModel->finishCommande($_SESSION['user_id']);
-        redirect('Products/dashboardCmd');
+
+
+        redirect('Products/facture/'.$idCommande);
          
     }
+
+
     public function dashboardCmd(){
 
         $commandes = $this->productModel->commandesDetails($_SESSION['user_id']);
+        
 
         $this->view('pages/dashboardCmd', $commandes);
+
+    }
+    public function clientList(){
+
+        $data = $this->productModel->getClients();
+
+
+        $this->view('pages/clientList', $data);
 
     }
 
@@ -293,10 +436,13 @@ class Products extends Controller
     public function product_cat($cat)
     {
         $products = $this->productModel->getProductsByCategorie($cat);
+
+        $categories = $this->productModel->getCategorie();
         $rows = $this->productModel->stats();
         $data = [
             'products' => $products,
-            'num' => $rows
+            'num' => $rows,
+            'categories' => $categories
         ];
         $this->view('pages/dashboard', $data);
     }

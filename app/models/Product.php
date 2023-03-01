@@ -18,6 +18,43 @@ class Product
 
         return $results;
     }
+    public function getCommandsDetails($idCommande)
+    {
+        $this->db->query("SELECT SUM(products.price*ligne_commande.quantite) as prix_total, ligne_commande.quantite, products.*
+        FROM commande
+        JOIN ligne_commande ON ligne_commande.id_commande = commande.commande_id
+        JOIN products ON products.id = ligne_commande.id_produit
+        WHERE ligne_commande.id_commande = $idCommande
+        GROUP BY ligne_commande.quantite, products.id");
+
+        $this->db->execute();
+        $results = $this->db->resultSet();
+
+        return $results;
+    }
+    public function getTotalPrix($idCommande)
+    {
+        $this->db->query("SELECT  sum(p.price*lc.quantite) as prix_total FROM `ligne_commande` lc 
+        JOIN products p
+        ON lc.id_produit = p.id
+        WHERE lc.id_commande = $idCommande; ");
+        $this->db->execute();
+        $results = $this->db->resultSet();
+
+        return $results;
+    }
+
+    public function getClientByCommande($idCommande)
+    {
+        $this->db->query("SELECT client.* FROM `commande`
+JOIN client ON commande.id_client = client.id
+WHERE commande.commande_id = $idCommande");
+        $this->db->execute();
+        $results = $this->db->resultSet();
+
+        return $results;
+    }
+
 
     public function addToCart($data)
     {
@@ -40,6 +77,16 @@ class Product
             'SELECT * from commande where id_client = :id'
         );
         $this->db->bind('id', $id);
+        $this->db->execute();
+        $results = $this->db->resultSet();
+        return $results;
+    }
+
+    public function getClients()
+    {
+        $this->db->query(
+            'SELECT * from client'
+        );
         $this->db->execute();
         $results = $this->db->resultSet();
         return $results;
@@ -98,11 +145,10 @@ class Product
         $this->db->transaction();
         $this->db->query('INSERT INTO `commande`(`id_client`) VALUES (:idc)');
         $this->db->bind('idc', $data['user_id']);
-
-
         $this->db->execute();
         return $this->db->lastid();
     }
+
     public function addOrderToCommande($data)
     {
 
@@ -130,26 +176,28 @@ class Product
         return $results;
     }
 
-    public function annuler($id_commande){
-      
+    public function annuler($id_commande)
+    {
+
         $this->db->query("UPDATE commande SET etat = 4 WHERE commande_id = :id_commande ");
         $this->db->bind(':id_commande', $id_commande);
         $this->db->execute();
-
     }
-    public function envoiCommande($id_commande){
-      
+    public function envoiCommande($id_commande)
+    {
+
         $this->db->query("UPDATE commande SET date_envoi = CURRENT_TIMESTAMP(),etat = 2 WHERE commande_id = :id_commande ");
         $this->db->bind(':id_commande', $id_commande);
         $this->db->execute();
     }
-    public function livraisonCommande($id_commande){
-      
+    public function livraisonCommande($id_commande)
+    {
+
         $this->db->query("UPDATE commande SET date_livraison = CURRENT_TIMESTAMP(),etat = 3 WHERE commande_id = :id_commande ");
         $this->db->bind(':id_commande', $id_commande);
         $this->db->execute();
     }
-    
+
     public function getProductById($id)
     {
         $this->db->query("SELECT * FROM products WHERE id = :id");
@@ -214,6 +262,64 @@ class Product
             return false;
         }
     }
+
+    public function addCategorie($data){
+        $this->db->query("INSERT INTO categorie (name, image) VALUES (:name, :image)");
+        $this->db->bind(':name', $data['name']);
+        $this->db->bind(':image', $data['image']);
+        //execute
+        if ($this->db->execute()) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public function getCategorie(){
+        $this->db->query("SELECT * FROM categorie");
+        $this->db->execute();
+        $results = $this->db->resultSet();
+        return $results;
+    }
+
+    public function editCategorie($data){
+
+        $this->db->query("UPDATE `categorie` SET name = :name, image = :image WHERE id = :id");
+        $this->db->bind(':name', $data['name']);
+        $this->db->bind(':image', $data['image']);
+        $this->db->bind(':id', $data['id']);
+        //execute
+        if ($this->db->execute()) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public function deletCategorie($id)
+    {
+        $this->db->query("DELETE FROM categorie WHERE id = :id");
+        $this->db->bind(':id', $id);
+        if ($this->db->execute()) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+
+    public function findCategorieById($id){
+        $this->db->query('SELECT * FROM categorie WHERE id = :id');
+        $this->db->bind(':id', $id);
+
+        $row = $this->db->single();
+
+        return $row;
+    }
+
+
+
+
     public function findproductById($id)
     {
         $this->db->query('SELECT * FROM products WHERE id = :id');
@@ -270,18 +376,4 @@ class Product
     {
         return $this->db->rowCount();
     }
-
-
-    public function pagination(){
-
-            $this->db->query("SELECT COUNT(*) FROM products");
-            
-            $results = $this->db->resultSet();
-
-            return $results;
-
-           
-    }
-
-
 }

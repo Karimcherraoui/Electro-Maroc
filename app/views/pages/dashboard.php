@@ -1,50 +1,52 @@
 <?php
 require APPROOT . '/views/inc/header.php';
+show($data['categorie']);
+
 ?>
 
 
 
 
-<div class="flex justify-center gap-6 mt-5">
-    <a class="transform  hover:scale-105 transition duration-300 shadow-xl rounded-lg col-span-12 sm:col-span-6 xl:col-span-3 intro-y bg-white" href="#">
-        <!-- <div class="p-5">
-            <div class="flex justify-between">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-7 w-7 text-blue-400" fill="none" viewBox="0 0 24 24"
-                    stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                        d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
-                </svg>
-            </div>
 
-            <div class="ml-2 w-full flex-1">
-                <div>
-                    <div class="mt-3 text-3xl font-bold leading-8"><?= $data['num'] ?> Product(s)</div>
-
-                    <div class="mt-1 text-base text-gray-600">In stock</div>
-                </div>
-
-            </div>
-        </div> -->
-    </a>
-</div>
 
 <!-- Card Product -->
 <div class="mt-10 xl:mb-32 xl:mx-20 ">
-    <div class=" flex py-1 block justify-center items-center font-bold">
+    <div class=" grid py-1 grid-rows-2 justify-center items-center font-bold">
+<div class=" flex py-1 block justify-center items-center font-bold">
 
-        <a href="<?= URLROOT ?>/Products/product" class="text-sm hover:bg-gray-100 text-gray-700 block px-4 py-2">All Product</a>
+<a href="<?= URLROOT ?>/Products/categorie" class="text-sm hover:bg-green-100 text-blue-700 block px-4 py-2">Add Categorie</a>
 
-        <a href="<?= URLROOT ?>/Products/product_cat/smartphone" class="text-sm hover:bg-gray-100 text-gray-700 block px-4 py-2">Smartphones</a>
+    <a href="<?= URLROOT ?>/Products/product" class="text-sm hover:bg-gray-100 text-gray-700 block px-4 py-2">All Product</a>
+    <?php foreach ($data['categories'] as $categorie) : ?>
 
+    <a href="<?= URLROOT ?>/Products/product_cat/smartphone" class="text-sm hover:bg-gray-100 text-gray-700 block px-4 py-2"><?php echo $categorie->name; ?></a>
+    
+    <?php endforeach; ?>
 
-        <a href="<?= URLROOT ?>/Products/product_cat/laptop" class="text-sm hover:bg-gray-100 text-gray-700 block px-4 py-2">Laptops</a>
+    <!-- <a href="<?= URLROOT ?>/Products/product_cat/laptop" class="text-sm hover:bg-gray-100 text-gray-700 block px-4 py-2">Laptops</a>
+    
+    
+    <a href="<?= URLROOT ?>/Products/product_cat/tv" class="text-sm hover:bg-gray-100 text-gray-700 block px-4 py-2">Televisions</a>
+     -->
+</div>
 
+        
+<!-- <div >
 
-        <a href="<?= URLROOT ?>/Products/product_cat/tv" class="text-sm hover:bg-gray-100 text-gray-700 block px-4 py-2">Televisions</a>
+    <form action="<?php echo URLROOT . '/Products/addCategorie/'; ?>" method="POST" id="categorieForm" >
+        <div class="grid grid-cols-3 text-sm font-normal w-full ml-6">
 
-
-    </div>
-
+            <label class="text-center mt-3 ml-16" for="name">Categorie Name :</label>
+            <input id="name" name="name" type="text" class=" mt-2 w-48 h-7	text-gray-700 bg-white border border-[#685942] rounded-md focus:border-[#685942] focus:outline-none focus:ring">
+            <button form="categorieForm"  type="submit" class="w-1/3 h-7 mt-1.5 rounded-md focus:outline-none font-normal bg-green-500 hover:bg-green-600 text-white transition ml-4">
+                Save
+            </button>
+        </div>
+    
+</form>
+</div> -->
+    
+</div>
 
     <div class="bg-white rounded-lg shadow-md p-6">
         <h2 class="text-lg font-medium mb-4">Product List</h2>

@@ -43,7 +43,6 @@ class Pages extends Controller
         $products = $this->productModel->getProducts();
        
         $rows = $this->productModel->stats();
-        $pagination = $this->productModel->pagination();
 
         $data = [
             'products' => $products,

@@ -9,7 +9,7 @@ require APPROOT . '/views/inc/header.php';
 
     <!-- <?php foreach ($data['products'] as $product) : ?> -->
 
-    <div class="w-80 bg-white shadow rounded">
+    <div class="w-80 bg-white shadow rounded xl:ml-0 ml-7">
         <div class="h-48 w-full flex flex-col justify-between p-4 bg-cover bg-center" style="background-image: url('<?php echo URLROOT . '/images/upload/' . $product->image; ?>');width: 330px; 
        height: 250px; 
       ; 

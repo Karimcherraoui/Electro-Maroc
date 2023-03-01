@@ -37,16 +37,16 @@ require APPROOT . '/views/inc/header.php';
 
 
     <div class="bg-white rounded-lg shadow-md p-6">
-        <h2 class="text-lg font-medium mb-4">Commandes List</h2>
+        <h2 class="text-lg font-medium mb-4">Client List</h2>
         <table class="w-full text-left table-collapse">
             <thead>
                 <tr>
-                    <th class="text-sm font-medium text-gray-700 p-2 bg-gray-100">Etat</th>
-                    <th class="text-sm font-medium text-gray-700 p-2 bg-gray-100">Date creation</th>
-                    <th class="text-sm font-medium text-gray-700 p-2 bg-gray-100">date d'envoie</th>
-                    <th class="text-sm font-medium text-gray-700 p-2 bg-gray-100">date livraison</th>
-                    <th class="text-sm font-medium text-gray-700 p-2 bg-gray-100">Prix total</th>
-                    <th class="text-sm font-medium text-gray-700 p-2 bg-gray-100">Action</th>
+                    <th class="text-sm font-bold text-black p-2 bg-gray-100 ">fullName</th>
+                    <th class="text-sm font-bold text-black p-2 bg-gray-100 ">Numero</th>
+                    <th class="text-sm font-bold boldtext-black p-2 bg-gray-100 ">Adress</th>
+                    <th class="text-sm font-bold text-black p-2 bg-gray-100 ">Ville</th>
+                    <th class="text-sm font-bold text-black p-2 bg-gray-100 ">UserName</th>
+                    <th class="text-sm font-bold text-black p-2 bg-gray-100 ">Email</th>
 
                   
 
@@ -55,18 +55,17 @@ require APPROOT . '/views/inc/header.php';
             </thead>
             
             <tbody>
-            <?php foreach ($data as $commande) : ?>
-                
-                <tr class="odd:bg-gray-100 result_search">
-                <td class="p-2"><?php echo $commande->etat; ?></td>
-                <td class="p-2"><?php echo $commande->date_creation; ?></td>
-                <td class="p-2"><?php echo $commande->date_envoi; ?></td>
-                <td class="p-2"><?php echo $commande->date_livraison; ?></td>
-                <td class="p-2"><?php echo $commande->price; ?></td>
-                <td>
+            <?php foreach ($data as $client) : ?>
 
-                    <a href="<?= URLROOT . '/Products/facture/'.$commande->commande_id; ?>">Facture</a>
-                </td>
+                <tr class="odd:bg-gray-100 result_search">
+                <td class="p-2"><?php echo $client->fullName; ?></td>
+                <td class="p-2"><?php echo $client->numero; ?></td>
+                <td class="p-2"><?php echo $client->adress; ?></td>
+
+                <td class="p-2"><?php echo $client->ville; ?></td>
+                <td class="p-2"><?php echo $client->userName; ?></td>
+                <td class="p-2"><?php echo $client->email; ?></td>
+
                 </tr>
                 <?php endforeach; ?>
 
