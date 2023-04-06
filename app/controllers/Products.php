@@ -16,25 +16,37 @@ class Products extends Controller
         $this->userModel = $this->model('User');
     }
 
-    public function categorie(){
+    public function categorie()
+    {
 
         $data = $this->productModel->getCategorie();
 
-        $this->view('pages/categorie',$data);
+        $this->view('pages/categorie', $data);
     }
 
 
 
-    public function deleteCategorie($id){
+    public function deleteCategorie($id)
+    {
         $this->productModel->deletCategorie($id);
         redirect('Products/categorie');
     }
 
-   
+    public function updateCategorie($id)
+    {
+
+        $data = $this->productModel->getCategorieById($id);
+        $this->view('pages/editCategorie', $data);
+    }
 
 
-    public function addCategorie(){
-        
+
+
+
+
+    public function addCategorie()
+    {
+
         echo 'test';
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
@@ -52,55 +64,52 @@ class Products extends Controller
             ];
 
             $this->productModel->addCategorie($data);
-                redirect('Products/categorie');
-
-            }else {
-                $data = [
-                    'name' => '',
-                    'image' => '',
-                ];
-                $this->view('pages/categorie', $data);
-            }
-            
-
-
-        } 
+            redirect('Products/categorie');
+        } else {
+            $data = [
+                'name' => '',
+                'image' => '',
+            ];
+            $this->view('pages/categorie', $data);
+        }
+    }
 
 
-        public function editCategorie($id){
+    public function editCategorie($id)
+    {
+
         
-            echo 'test';
-            if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    
-    
-                $_POST = filter_input_array(INPUT_POST, FILTER_SANITIZE_FULL_SPECIAL_CHARS);
-    
-                move_uploaded_file($_FILES['image']['tmp_name'], './images/upload/' . $_FILES['image']['name']);
-    
-                $categorie = $this->productModel->findCategorieById($id);
-                // $name = $_POST['name'];
-    
-                if (empty($_FILES['image']['name'])) {
-                    $data = [
+
+        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+
+
+            $_POST = filter_input_array(INPUT_POST, FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+
+            move_uploaded_file($_FILES['image']['tmp_name'], './images/upload/' . $_FILES['image']['name']);
+
+            $categorie = $this->productModel->findCategorieById($id);
+            // $name = $_POST['name'];
+
+            if (empty($_FILES['image']['name'])) {
+                $data = [
+                    'id' => $id,
                     'name' => $_POST['name'],
                     'image' => $categorie->image,
                 ];
-    
-                }else {
-                    $data = [
-                        'name' => $_POST['name'],
-                        'image' => $_FILES['image']['name']
-                    ];
-                }
+            } else {
+                $data = [
+                    'id' => $id,
+                    'name' => $_POST['name'],
+                    'image' => $_FILES['image']['name']
+                ];
+            }
 
-                $this->productModel->editCategorie($data);
-                    
-    
-            } 
-        
-        
+            $this->productModel->editCategorie($data);
         }
-    
+        redirect('Products/categorie');
+        
+    }
+
 
 
 
@@ -271,7 +280,7 @@ class Products extends Controller
             'categories' => $categories
         ];
 
-        
+
         $this->view('pages/dashboard', $data);
     }
 
@@ -283,13 +292,12 @@ class Products extends Controller
         $client = $this->userModel->getClientById($_SESSION['user_id']);
         $rows = $this->productModel->stats();
 
-        
+
         foreach ($product as $key => $value) {
-            
+
             $products[$key] = $this->productModel->getProductById($value->product_id);
-            
         }
-        
+
         $data = [
             'products' => $products,
             'users' => $client,
@@ -307,13 +315,13 @@ class Products extends Controller
     //     $rows = $this->productModel->stats();
 
     //     show($qte);
-        
+
     //     foreach ($product as $key => $value) {
-            
+
     //         $products[$key] = $this->productModel->getProductById($value->product_id);
-            
+
     //     }
-        
+
     //     $data = [
     //         'products' => $products,
     //         'users' => $client,
@@ -325,27 +333,26 @@ class Products extends Controller
 
 
     public function facture($idCommande)
-     {
-        
+    {
+
         // $idCommande = $this->productModel->idcommande();
         $details = $this->productModel->getCommandsDetails($idCommande);
         $totalPrix = $this->productModel->getTotalPrix($idCommande);
         $clientByCommande = $this->productModel->getClientByCommande($idCommande);
 
-        
+
         $data = [
-            
+
             'details' => $details,
             'total_prix' => $totalPrix,
             'client' => $clientByCommande,
-            'idCommande' =>$idCommande
+            'idCommande' => $idCommande
         ];
 
 
 
-        $this->view('pages/facture', $data );
-
-     }
+        $this->view('pages/facture', $data);
+    }
     public function addToOrder($id_prd)
     {
 
@@ -357,63 +364,63 @@ class Products extends Controller
         redirect('Products/commande');
     }
 
-    
 
 
 
-    public function addOrderToCommande(){
 
-    
+    public function addOrderToCommande()
+    {
+
+
         $products = $_POST['products'];
         $qtes = $_POST['qte'];
 
-        $detail =[
-            'user_id'=>$_SESSION['user_id']
+        $detail = [
+            'user_id' => $_SESSION['user_id']
         ];
         $idCommande =  $this->productModel->addCommande($detail);
-        
-        for ($i=0; $i < count($products); $i++) {
-            
+
+        for ($i = 0; $i < count($products); $i++) {
+
             $data = [
-                'quantite'=>$qtes[$i],
-                'id_produit'=>$products[$i],
-                'id_commande'=>$idCommande,
-                
+                'quantite' => $qtes[$i],
+                'id_produit' => $products[$i],
+                'id_commande' => $idCommande,
+
             ];
-             $this->productModel->addOrderToCommande($data);
+            $this->productModel->addOrderToCommande($data);
         }
-        
+
         $this->productModel->finishCommande($_SESSION['user_id']);
 
 
-        redirect('Products/facture/'.$idCommande);
-         
+        redirect('Products/facture/' . $idCommande);
     }
 
 
-    public function dashboardCmd(){
+    public function dashboardCmd()
+    {
 
         $commandes = $this->productModel->commandesDetails($_SESSION['user_id']);
-        
+
 
         $this->view('pages/dashboardCmd', $commandes);
-
     }
-    public function clientList(){
+    public function clientList()
+    {
 
         $data = $this->productModel->getClients();
 
 
         $this->view('pages/clientList', $data);
-
     }
 
-    public function dashboardCmdUser(){
+    public function dashboardCmdUser()
+    {
 
         $commandes = $this->productModel->commandesDetails();
 
         $this->view('pages/dashboardCmdUser', $commandes);
-
     }
     // create anuller envoie liver methods
     public function envoiCommande($idCommande)
@@ -445,6 +452,16 @@ class Products extends Controller
             'categories' => $categories
         ];
         $this->view('pages/dashboard', $data);
+    }
+
+    public function categorieForHeader()
+    {
+        $categories = $this->productModel->getCategorie();
+        $data = [
+
+            'categories' => $categories
+        ];
+        $this->view('inc/header', $data);
     }
 
     // public function dashboardCmdUser()

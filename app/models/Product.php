@@ -263,7 +263,8 @@ WHERE commande.commande_id = $idCommande");
         }
     }
 
-    public function addCategorie($data){
+    public function addCategorie($data)
+    {
         $this->db->query("INSERT INTO categorie (name, image) VALUES (:name, :image)");
         $this->db->bind(':name', $data['name']);
         $this->db->bind(':image', $data['image']);
@@ -275,15 +276,24 @@ WHERE commande.commande_id = $idCommande");
         }
     }
 
-    public function getCategorie(){
-        $this->db->query("SELECT * FROM categorie");
+    public function getCategorie()
+    {
+        $this->db->query("SELECT * FROM categorie ");
+        $this->db->execute();
+        $results = $this->db->resultSet();
+        return $results;
+    }
+    public function getCategorieById($id)
+    {
+        $this->db->query("SELECT * FROM categorie where id = $id");
         $this->db->execute();
         $results = $this->db->resultSet();
         return $results;
     }
 
-    public function editCategorie($data){
-
+    public function editCategorie($data)
+    {
+        // var_dump($data);
         $this->db->query("UPDATE `categorie` SET name = :name, image = :image WHERE id = :id");
         $this->db->bind(':name', $data['name']);
         $this->db->bind(':image', $data['image']);
@@ -308,7 +318,8 @@ WHERE commande.commande_id = $idCommande");
     }
 
 
-    public function findCategorieById($id){
+    public function findCategorieById($id)
+    {
         $this->db->query('SELECT * FROM categorie WHERE id = :id');
         $this->db->bind(':id', $id);
 

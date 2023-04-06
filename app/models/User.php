@@ -41,11 +41,11 @@ class User
 
     public function addClient($data){
 
-        $this->db->query('INSERT INTO client (fullName,numero,adress,ville,email,userName,password) VALUE (:fullName,numero,:adress,:ville,:email,:userName,:password)');
+        $this->db->query('INSERT INTO client (fullName,numero,adress,ville,email,userName,password) VALUE (:fullName,:numero,:adress,:ville,:email,:userName,:password)');
 
         // bind Value
         $this->db->bind(':fullName',$data['fullName']);
-        // $this->db->bind(':numero',$data['numero']);
+        $this->db->bind(':numero',$data['numero']);
         $this->db->bind(':adress',$data['adress']);
         $this->db->bind(':ville',$data['ville']);
         $this->db->bind(':email',$data['email']);

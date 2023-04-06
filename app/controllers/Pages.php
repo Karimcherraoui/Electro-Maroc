@@ -41,12 +41,13 @@ class Pages extends Controller
     public function allproduct()
     {
         $products = $this->productModel->getProducts();
+        $categories = $this->productModel->getCategorie();
        
         $rows = $this->productModel->stats();
 
         $data = [
             'products' => $products,
-            
+            'categories' => $categories,
             'num' => $rows
         ];
 
@@ -59,9 +60,11 @@ class Pages extends Controller
     public function allproduct_cat($cat)
     {
         $products = $this->productModel->getProductsByCategorie($cat);
+        $categories = $this->productModel->getCategorie();
         $rows = $this->productModel->stats();
         $data = [
             'products' => $products,
+            'categories' => $categories,
             'num' => $rows
         ];
         $this->view('pages/allproduct', $data);

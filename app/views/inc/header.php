@@ -42,16 +42,17 @@
                             <!-- Dropdown menu -->
                             <div id="dropdownNavbar"  class=" navbar-item hidden bg-white text-base z-10 list-none divide-y divide-gray-100 rounded shadow my-4 w-44 ">
                                 <ul class="py-1" aria-labelledby="dropdownLargeButton">
+                                <?php foreach ($data['categories'] as $categorie) : ?>
                                     <li>
-                                        <a href="<?= URLROOT ?>/Pages/allproduct_cat/smartphone" class="text-sm hover:bg-gray-100 text-gray-700 block px-4 py-2">Smartphones</a>
+                                        <a href="<?= URLROOT .'/Pages/allproduct_cat/'.$categorie->name;  ?>" class="text-sm hover:bg-gray-100 text-gray-700 block px-4 py-2"><?php echo $categorie->name; ?></a>
                                     </li>
-                                    <li>
+                                    <!-- <li>
                                         <a href="<?= URLROOT ?>/Pages/allproduct_cat/laptop" class="text-sm hover:bg-gray-100 text-gray-700 block px-4 py-2">Laptops</a>
                                     </li>
                                     <li>
                                         <a href="<?= URLROOT ?>/Pages/allproduct_cat/tv" class="text-sm hover:bg-gray-100 text-gray-700 block px-4 py-2">Televisions</a>
-                                    </li>
-                                    
+                                    </li> -->
+                                    <?php endforeach; ?>
                                 </ul>
 
                             </div>

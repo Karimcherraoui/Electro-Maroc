@@ -1,6 +1,6 @@
 <?php
 require APPROOT . '/views/inc/header.php';
-show($data['categorie']);
+// show($data);
 
 ?>
 
@@ -16,10 +16,11 @@ show($data['categorie']);
 
 <a href="<?= URLROOT ?>/Products/categorie" class="text-sm hover:bg-green-100 text-blue-700 block px-4 py-2">Add Categorie</a>
 
+
     <a href="<?= URLROOT ?>/Products/product" class="text-sm hover:bg-gray-100 text-gray-700 block px-4 py-2">All Product</a>
     <?php foreach ($data['categories'] as $categorie) : ?>
 
-    <a href="<?= URLROOT ?>/Products/product_cat/smartphone" class="text-sm hover:bg-gray-100 text-gray-700 block px-4 py-2"><?php echo $categorie->name; ?></a>
+    <a href="<?= URLROOT .'/Products/product_cat/'.$categorie->name;  ?>" class="text-sm hover:bg-gray-100 text-gray-700 block px-4 py-2"><?php echo $categorie->name; ?></a>
     
     <?php endforeach; ?>
 

@@ -70,7 +70,9 @@ require APPROOT . '/views/inc/header.php';
 
                         <td class="p-2">
                             <button class="text-red-500 hover:text-red-600"><a href="<?= URLROOT . '/Products/deleteCategorie/' . $categorie->id ?>">Delete</a></button>
+                            <button class="ml-4 text-blue-500 hover:text-red-600"><a href="<?= URLROOT . '/Products/updateCategorie/' . $categorie->id ?>">Edit</a></button>
                         </td>
+                        
                     </tr>
                 <?php endforeach; ?>
 
